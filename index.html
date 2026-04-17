@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hand Cricket</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=Gochi+Hand&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <div class="paper">
+    <div class="margin-line"></div>
+    <div class="hole top-hole"></div>
+    <div class="hole bottom-hole"></div>
+
+    <div class="page-content">
+      <div class="doodles">
+        <span class="doodle star">✦</span>
+        <span class="doodle arrow">→</span>
+        <span class="doodle heart">♥</span>
+        <span class="doodle star2">★</span>
+      </div>
+
+      <header class="lobby-header">
+        <p class="subject-line">Subject: <span class="underline">Games Period</span> &nbsp;&nbsp; Date: <span id="today-date"></span></p>
+        <h1 class="game-title">Hand Cricket!</h1>
+        <p class="tagline">~ the classic back-bench championship ~</p>
+      </header>
+
+      <div class="lobby-box">
+        <div class="ruled-section">
+          <p class="ruled-text">Rules &amp; Instructions:</p>
+          <p class="ruled-text small">1. Player 1 creates game &amp; shares link</p>
+          <p class="ruled-text small">2. Pick 1–6 at the same time (no peeking!)</p>
+          <p class="ruled-text small">3. Same number = <strong>OUT!</strong> Different = runs scored</p>
+          <p class="ruled-text small">4. Highest total wins. Simple hai bhai.</p>
+        </div>
+
+        <div class="lobby-actions">
+          <button class="btn-sketchy primary" id="create-btn">
+            <span>+ Create New Game</span>
+          </button>
+          <p class="or-divider">— or —</p>
+          <p class="join-text">Got a link from your friend? Just open it!</p>
+        </div>
+      </div>
+
+      <footer class="page-footer">
+        <span class="footer-doodle">⚡ Do Not Disturb ⚡</span>
+      </footer>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getFirestore, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+    // ── PASTE YOUR FIREBASE CONFIG HERE ──────────────────────────────────────
+    const firebaseConfig = {
+  apiKey: "AIzaSyChkWoAEh2EoD8J5c4LLNq1r0vOwncvzSs",
+  authDomain: "hand-cricket-705af.firebaseapp.com",
+  projectId: "hand-cricket-705af",
+  storageBucket: "hand-cricket-705af.firebasestorage.app",
+  messagingSenderId: "415173214464",
+  appId: "1:415173214464:web:676584c36ddc8e3e97f3e5",
+  measurementId: "G-PVC0CL5WQG"
+};
+    // ─────────────────────────────────────────────────────────────────────────
+
+    const app = initializeApp(firebaseConfig);
+    const db  = getFirestore(app);
+
+    // Today's date for the header
+    const d = new Date();
+    document.getElementById("today-date").textContent =
+      d.toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "2-digit" });
+
+    function generateUUID() {
+      return "xxxxxxxx-xxxx".replace(/x/g, () =>
+        Math.floor(Math.random() * 16).toString(16)
+      );
+    }
+
+    document.getElementById("create-btn").addEventListener("click", async () => {
+      const btn = document.getElementById("create-btn");
+      btn.disabled = true;
+      btn.querySelector("span").textContent = "creating...";
+
+      const roomId = generateUUID();
+      const roomRef = doc(db, "rooms", roomId);
+
+      await setDoc(roomRef, {
+        status: "waiting",
+        createdAt: serverTimestamp(),
+        p1: { id: null, move: null, role: "bat", totalScore: 0 },
+        p2: { id: null, move: null, role: "bowl", totalScore: 0 },
+        target: null,
+        toss: { p1Choice: null, p2Choice: null, winner: null },
+        currentInnings: 1,
+        ballCount: 0,
+        lastResult: null
+      });
+
+      window.location.href = `game.html?room=${roomId}`;
+    });
+  </script>
+</body>
+</html>

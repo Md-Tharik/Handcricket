@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hand Cricket – Game</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=Gochi+Hand&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <!-- ═══════════════ PAPER ═══════════════ -->
+  <div class="paper" id="paper">
+    <div class="margin-line"></div>
+    <div class="hole top-hole"></div>
+    <div class="hole bottom-hole"></div>
+
+    <!-- ──── WAITING SCREEN ──── -->
+    <div id="screen-waiting" class="screen">
+      <div class="page-content center-content">
+        <h2 class="section-title">Waiting for friend...</h2>
+        <div class="waiting-animation">
+          <span>.</span><span>.</span><span>.</span>
+        </div>
+        <div class="invite-box">
+          <p class="small-label">Share this link with your friend:</p>
+          <p class="invite-url" id="invite-url-text"></p>
+          <button class="btn-sketchy" id="copy-link-btn">📋 Copy Invite Link</button>
+          <p class="copy-confirm" id="copy-confirm">✓ Copied!</p>
+        </div>
+        <p class="doodle-note">← Tell them to open it on their phone!</p>
+      </div>
+    </div>
+
+    <!-- ──── TOSS SCREEN ──── -->
+    <div id="screen-toss" class="screen hidden">
+      <div class="page-content center-content">
+        <h2 class="section-title">The Toss!</h2>
+        <p class="toss-instructions">Pick <strong>Odd</strong> or <strong>Even</strong></p>
+        <div id="toss-choice-area">
+          <button class="btn-sketchy toss-btn" data-choice="odd">ODD</button>
+          <button class="btn-sketchy toss-btn" data-choice="even">EVEN</button>
+        </div>
+        <div id="toss-waiting" class="hidden">
+          <p class="ruled-text">Waiting for opponent's pick...</p>
+          <div class="waiting-animation"><span>.</span><span>.</span><span>.</span></div>
+        </div>
+        <div id="toss-result" class="hidden">
+          <p class="toss-result-text" id="toss-result-text"></p>
+        </div>
+        <p class="small-label" id="toss-pick-label" style="display:none"></p>
+      </div>
+    </div>
+
+    <!-- ──── PLAYING SCREEN ──── -->
+    <div id="screen-playing" class="screen hidden">
+      <div class="page-content">
+
+        <!-- Scoreboard -->
+        <div class="scoreboard">
+          <div class="score-col">
+            <p class="score-label" id="p1-label">You</p>
+            <p class="score-value" id="p1-score">0</p>
+            <p class="score-role" id="p1-role">🏏</p>
+          </div>
+          <div class="score-divider">
+            <p class="innings-label" id="innings-label">1st Innings</p>
+            <p class="vs-text">vs</p>
+            <p class="target-label" id="target-label"></p>
+          </div>
+          <div class="score-col right">
+            <p class="score-label" id="p2-label">Opponent</p>
+            <p class="score-value" id="p2-score">0</p>
+            <p class="score-role" id="p2-role">🎳</p>
+          </div>
+        </div>
+
+        <!-- Status bar -->
+        <div class="status-bar">
+          <p id="status-text" class="status-text">Pick your number!</p>
+        </div>
+
+        <!-- Number buttons -->
+        <div class="number-grid" id="number-grid">
+          <button class="num-btn" data-num="1">1</button>
+          <button class="num-btn" data-num="2">2</button>
+          <button class="num-btn" data-num="3">3</button>
+          <button class="num-btn" data-num="4">4</button>
+          <button class="num-btn" data-num="5">5</button>
+          <button class="num-btn" data-num="6">6</button>
+        </div>
+
+        <!-- Last ball result -->
+        <div class="last-ball-area" id="last-ball-area">
+          <div class="last-ball-inner">
+            <span class="last-ball-label">Last ball:</span>
+            <span class="last-ball-nums" id="last-ball-nums">—</span>
+            <span class="last-ball-runs" id="last-ball-runs"></span>
+          </div>
+        </div>
+
+        <!-- Score history tally -->
+        <div class="tally-row" id="score-tally"></div>
+
+      </div>
+    </div>
+
+    <!-- ──── INNINGS BREAK SCREEN ──── -->
+    <div id="screen-innings-break" class="screen hidden">
+      <div class="page-content center-content">
+        <h2 class="section-title">Innings Over!</h2>
+        <p class="innings-break-text" id="innings-break-text"></p>
+        <div class="waiting-animation"><span>.</span><span>.</span><span>.</span></div>
+        <p class="small-label">Starting 2nd innings shortly...</p>
+      </div>
+    </div>
+
+    <!-- ──── GAME OVER SCREEN ──── -->
+    <div id="screen-game-over" class="screen hidden">
+      <div class="page-content center-content">
+        <h2 class="section-title">Game Over!</h2>
+        <div class="final-scores">
+          <p class="final-score-line" id="final-score-p1"></p>
+          <p class="final-score-line" id="final-score-p2"></p>
+        </div>
+        <p class="winner-text" id="winner-text"></p>
+        <button class="btn-sketchy primary" id="play-again-btn">Play Again?</button>
+        <p class="small-label" style="margin-top:12px">
+          <a href="index.html" class="back-link">← back to lobby</a>
+        </p>
+      </div>
+    </div>
+
+    <!-- ──── OUT OVERLAY ──── -->
+    <div id="out-overlay" class="out-overlay hidden">
+      <div class="out-text">OUT!</div>
+      <div class="scribble-lines">
+        <svg viewBox="0 0 300 120" xmlns="http://www.w3.org/2000/svg">
+          <path d="M10,60 Q80,10 150,60 Q220,110 290,60" stroke="#cc0000" stroke-width="4" fill="none" stroke-linecap="round"/>
+          <path d="M10,40 Q90,90 180,30 Q250,0 290,50" stroke="#cc0000" stroke-width="3" fill="none" stroke-linecap="round"/>
+          <path d="M20,80 Q100,30 200,80 Q260,110 290,70" stroke="#cc0000" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+        </svg>
+      </div>
+    </div>
+
+    <!-- ──── REVEAL OVERLAY ──── -->
+    <div id="reveal-overlay" class="reveal-overlay hidden">
+      <div class="fist-container">
+        <div class="fist" id="reveal-fist">✊</div>
+        <p class="reveal-countdown" id="reveal-countdown">3</p>
+      </div>
+    </div>
+
+  </div><!-- end .paper -->
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>
